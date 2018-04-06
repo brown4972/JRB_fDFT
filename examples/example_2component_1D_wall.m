@@ -1,12 +1,15 @@
 clear
 
-% This is an example of a mixture of two different sized hard sphere
-% components (size 1 and 3 sigma) between two hard walls
+% This is an example of a binary mixture of two different sized hard sphere
+% components (size 1 and 3 sigma) between two hard walls, with parameters
+% chosen to match Figure 3 of Roth, J. Phys.: Condens. Matter 22 (2010)
+% 063102.
 
 % 1D symmetry, periodic BCs, cell size of 1/40 sigma, 2000 cells (50 sigma)
 mesh = dft_mesh_parameters(1, 'p', 0.025, 2000)
 
-% 2 components, HS diamets of 1 and 3, bath densities as specified
+% 2 components, HS diameters of 1 and 3, bath densities as specified to
+% give packing fractions of 0.01 and 0.3576, respectively.
 components = dft_component_parameters(2, [1,3], [0.01*6/pi, 0.3576*6/pi/27])
 
 % wall at x=0 and x=50
@@ -38,4 +41,7 @@ rho_guess = NaN;
 
 % plot results
 figure(1)
-plot(mesh.x,box.rho(:,1,1,1),mesh.x,box.rho(:,1,1,2))
+subplot(1,2,1), plot(mesh.x,box.rho(:,1,1,1))
+xlim([0 8])
+subplot(1,2,2), plot(mesh.x,box.rho(:,1,1,2))
+xlim([0 8])

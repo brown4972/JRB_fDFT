@@ -1,14 +1,18 @@
 clear
 
+% This is an example of a pure hard sphere fluid next to a hard wall, with
+% parameters chosen to match Figure 1(a) of Roth, J. Phys.: Condens. Matter
+% 22 (2010) 063102.
+
 % The mesh parameters class stores static properties of the computational
 % mesh, including it's size and boundary conditions
 % In this case, the system has 1D symmetry, the bounary conditions are
 % periodic, each cell is 1/40th of sigma (the nondimensionalized unit of
-% distance), and the box is 5.5 sigma wide
+% distance), and the box is 10 sigma wide
 dimensionality = 1
 boundary_conditions = 'p' %periodic
 cell_size = 0.025
-number_of_cells = 220
+number_of_cells = 400
 mesh = dft_mesh_parameters(dimensionality, boundary_conditions, cell_size, number_of_cells)
 
 
@@ -25,17 +29,17 @@ components = dft_component_parameters(Num_components, hard_sphere_diameters, rho
 % The box class stores the non-static solution to the fDFT equations
 % The location of the wall is passed in here
 % Note that the wall is at cell 1, which due to periodic BCs is both x=0
-% and x=5.5
+% and x=10
 wall_location = logical(zeros(number_of_cells,1)); %#ok<LOGL>
 wall_location(1) = true;
 box = dft_box(mesh, components, wall_location)
 
 
 % The external potential functional
-% in this case the wall at x=0 and x=5.5
+% in this case the wall at x=0 and x=10
 vext = zeros(number_of_cells,1);
 vext(1:20) = 200;
-vext(202:number_of_cells) = 200;
+vext(382:number_of_cells) = 200;
 external = dft_functional_external(vext, mesh, components)
 
 % The ideal gas functional has no input parameters
@@ -56,7 +60,7 @@ rho_guess = NaN;
 % This is the solver call, the only parameter to set if if we want to skip
 % the (slow) Picard solver, if we think our inital guess is close enough
 % not to need it
-skip_Picard = false;
+skip_Picard = true;
 [box, Omega, iter] = dft_solver( rho_guess, model, box, mesh, components, skip_Picard )
 
 % plot the solution

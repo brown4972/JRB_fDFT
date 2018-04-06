@@ -1,9 +1,9 @@
 clear
 
-% 20 site polymer between two walls
+% 20 site polymer between two hard walls
 
-% 1D symmetry, periodic BCs, cell size of 1/40 sigma, box size of 220 cells (5.5 sigma)
-mesh = dft_mesh_parameters(1, 'p', 0.025, 220)
+% 1D symmetry, periodic BCs, cell size of 1/40 sigma, box size of 400 cells (10 sigma)
+mesh = dft_mesh_parameters(1, 'p', 0.025, 400)
 
 % For polymers the component creation is a bit different, because we now
 % can have different types of monomers, and different types of polymers
@@ -19,15 +19,15 @@ rho_polymer_bath = 0.813;
 polymer_sequences = {ones(1,20)};
 components = dft_polymer_parameters(Num_monomers, monomer_dHS, Num_polymers, rho_polymer_bath, polymer_sequences)
 
-% wall at x=0 aka x=5.5
-wall_location = logical(zeros(220,1)); %#ok<LOGL>
+% wall at x=0 aka x=10
+wall_location = logical(zeros(400,1)); %#ok<LOGL>
 wall_location(1) = true;
 box = dft_box_isaft(mesh, components, wall_location)
 
 % external field for wall(s)
-vext = zeros(220,1,1,1);
+vext = zeros(400,1,1,1);
 vext(1:20,:,:,:) = 200;
-vext(202:220,:,:,:) = 200;
+vext(382:400,:,:,:) = 200;
 external = dft_functional_external(vext, mesh, components)
 
 % ideal gas and hard sphere functionals are unchanged
