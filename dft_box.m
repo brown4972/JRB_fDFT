@@ -76,7 +76,11 @@ classdef dft_box
                             obj.wall_weight(circshift(wall_edge_location,-components.dHS(n)/mesh.DX/2),n) = 0.5;
                         end
                     case 2                    
-                        error('2D walls not yet implemented')
+                        pwr =  circshift(wall_edge_location,  components.dHS(n)/mesh.DX/2,1) + ... 
+                               circshift(wall_edge_location, -components.dHS(n)/mesh.DX/2,1) + ...
+                               circshift(wall_edge_location,  components.dHS(n)/mesh.DX/2,2) +  ...
+                               circshift(wall_edge_location, -components.dHS(n)/mesh.DX/2,2);
+                        obj.wall_weight = 2.^(-pwr);
                     case 3
                         error('3D walls not yet implemented')
                 end
